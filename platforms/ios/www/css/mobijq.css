@@ -1,0 +1,22 @@
+[data-role=mjq_slider] > div{
+	width: 100%;
+	display:none;
+}
+
+[data-role=mjq_slider] > div:first-child {
+	display:block;
+}
+
+[data-role=mjq_slider] > div > a > p {
+	position: absolute;
+	color: white;
+	width: 100%;
+	margin: 0;
+	font-size: 1em;
+	padding: 5px 0 5px 10px;
+	background-color: rgba(0,0,0,0.4);
+}
+
+[data-role=mjq_slider] > div > a > img {
+	width: 100%;
+}
