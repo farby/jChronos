@@ -27,11 +27,11 @@ function login(user, pass) {
   return ok;
 }
 
-function marcar(lat, lon) {
+function marcar(lat, lon, acu) {
   var lt = ""+lat;
   var ln = ""+lon;
   $("#lstMarcas").append(
-    '<li data-theme="e" class="ui-li-has-icon"><a data-transition="none" href="" class="ui-btn ui-btn-e"><img src="" class="ui-li-icon">'+lt.substring(0,7)+' '+ln.substring(0,7)+'</a></li>'
+    '<li data-theme="e" class="ui-li-has-icon"><a data-transition="none" href="" class="ui-btn ui-btn-e"><img src="" class="ui-li-icon">'+lt.substring(0,7)+' '+ln.substring(0,7)+' '+acu+'m </a></li>'
   );
 }
 
@@ -45,8 +45,9 @@ function geolocalizar() {
     function success(position) {
       var latitude  = position.coords.latitude;
       var longitude = position.coords.longitude;
+        var accuracy = position.coords.accuracy;
 
-      marcar(latitude, longitude);
+      marcar(latitude, longitude, accuracy);
       toastr.success("Marca registrada correctamente.");
       $.mobile.loading('hide');
       //output.innerHTML = '<p>Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>';
