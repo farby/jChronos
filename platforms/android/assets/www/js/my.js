@@ -46,7 +46,8 @@ function geolocalizar() {
       var latitude  = position.coords.latitude;
       var longitude = position.coords.longitude;
         var accuracy = position.coords.accuracy;
-
+        navigator.vibrate(3000);
+        
       marcar(latitude, longitude, accuracy);
       toastr.success("Marca registrada correctamente.");
       $.mobile.loading('hide');
@@ -69,6 +70,8 @@ function geolocalizar() {
     });
 
     navigator.geolocation.getCurrentPosition(success, error);
+    var serial = device.serial;
+    alert(serial);
 }
 
 $(document).ready(init);
