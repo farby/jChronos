@@ -18,12 +18,16 @@ function login(user, pass) {
     success: function (SOAPResponse) {
       if ($(SOAPResponse.toXML()).find("Success").text() == "true") {
         ok = true;
+        localStorage.setItem("nombre", $(SOAPResponse.toXML()).find("Nombre").text());
+        localStorage.setItem("apellido", $(SOAPResponse.toXML()).find("Apellido").text());
+        localStorage.setItem("tipo", $(SOAPResponse.toXML()).find("Tipofuncionario").text());
       }
     },
     error: function() {
       alert("error");
     }
   });
+$("#lblNombre").html(localStorage.getItem("nombre")+" "+localStorage.getItem("apellido"));
   return ok;
 }
 
@@ -108,5 +112,6 @@ function init() {
     function() {
       geolocalizar();
     }
-  )
+  );
+$("#lblNombre").html(localStorage.getItem("nombre")+" "+localStorage.getItem("apellido"));
 }
