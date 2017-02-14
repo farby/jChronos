@@ -7,16 +7,16 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-geolocation": {
+        "cordova-plugin-device": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         },
-        "cordova-plugin-whitelist": {
+        "cordova-plugin-geolocation": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         },
         "cordova-plugin-vibration": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         },
-        "cordova-plugin-device": {
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
