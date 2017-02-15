@@ -18,11 +18,6 @@
     <platform name="android">
         <allow-intent href="market:*" />
     </platform>
-    <platform name="ios">
-        <allow-intent href="itms:*" />
-        <allow-intent href="itms-apps:*" />
-    </platform>
-    <engine name="ios" spec="~4.3.1" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <plugin name="cordova-plugin-geolocation" spec="~2.4.1" />
     <engine name="android" spec="~6.1.2" />

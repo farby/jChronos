@@ -1,4 +1,4 @@
-#Tue Feb 14 19:42:43 UYT 2017
+#Wed Feb 15 16:55:57 UYT 2017
 base.0=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/transforms/dex/debug/folders/1000/1f/main
 renamed.0=classes.dex
 file.0=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes.dex
