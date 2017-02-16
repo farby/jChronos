@@ -1,5 +1,9 @@
 var marcas = [];
 var pendientes = [];
+var hay1;
+var hay2;
+var hay3;
+var hay4;
 
 function login(user, pass) {
   var ok = false;
@@ -51,8 +55,23 @@ function marcar(tipo) {
         Hora: hora,
         Latitud: 0,
         Longitud: 0,
-        Tipomarca: 1
+        Tipomarca: tipo
     };
+	switch (tipo) {
+		case 1:
+			hay1 = true;
+			break;
+		case 2:
+			hay2 = true;
+			break;
+		case 3:
+			hay3 = true;
+			break;
+		case 4:
+			hay4 = true;
+			break;
+	}
+	updBtnMarcar();
     geolocalizar(marca);
     marcas.push(marca);
     pendientes.push(marca);
@@ -81,7 +100,7 @@ function geolocalizar(marca) {
         function error() {
             toastr.error("No se logró obtener la geolocalización.");
             $.mobile.loading('hide');
-            sndMarcas(marca);
+            sndMarca(marca);
         }
         $.mobile.loading('show', {
             text: 'geolocalizando',
@@ -98,7 +117,7 @@ function geolocalizar(marca) {
     });
 }*/
 
-function sndMarcas(m) {
+function sndMarca(marca) {
     //var tmp = [];
     //pendientes.forEach(function(m) {
     $.soap({
@@ -107,7 +126,7 @@ function sndMarcas(m) {
         appendMethodToURL: false,
         async: false,
         withCredentials: false,
-        data: m,
+        data: marca,
         namespaceQualifier: "o",
         namespaceURL: "Oclock",
         enableLogging: true,
@@ -123,68 +142,17 @@ function sndMarcas(m) {
             toastr.warning("No se logró establecer conexión con el servidor. Se intentará luego.");
         }
     });
-    dspMarca(m);
+    dspMarca(marca);
     //});
     //pendientes = tmp;
 }
 
 function dspMarca(marca) {
-    $("#lstMarcas").append('<li data-theme="e" class="ui-li-has-icon"><a data-transition="none" href="" class="ui-btn ui-btn-e"><img src="" class="ui-li-icon">' + marca.Tipomarca + ': ' + marca.Hora + 'hs | lat ' + marca.Latitud + ' lon ' + marca.Longitud + '</a></li>');
-}
-/*
-
-    enviarMarca(marca);
-    //marcas.push(marca);
-    //setMarcasHoy();
+    $("#lstMarcas").append('<li data-theme="e" class="ui-li-has-icon"><a data-transition="none" href="" class="ui-btn ui-btn-e"><img src="" class="ui-li-icon">' + getTipoMarca(marca.Tipomarca) + ': ' + marca.Hora + "hs (lat " + marca.Latitud + " lon " + marca.Longitud + '</a></li>');
 }
 
-function enviarMarca(marca) {
-    
-    $("#lstMarcas").append(
-    '<li data-theme="e" class="ui-li-has-icon"><a data-transition="none" href="" class="ui-btn ui-btn-e"><img src="" class="ui-li-icon">asdasdasda </a></li>');
-    //setMarcasHoy();
-}
-
-function geolocalizar() {
-  var output = document.getElementById("out");
-
-  if (!navigator.geolocation){
-      toastr.error("Geolocalización no soportada.");
-    }
-
-    function success(position) {
-      var latitude  = position.coords.latitude;
-      var longitude = position.coords.longitude;
-        var accuracy = position.coords.accuracy;
-        navigator.vibrate(3000);
-        
-      marcar(latitude, longitude, accuracy, 1);
-      toastr.success("Marca registrada correctamente.");
-      $.mobile.loading('hide');
-      //output.innerHTML = '<p>Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>';
-
-      //var img = new Image();
-      //img.src = "https://maps.googleapis.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&zoom=13&size=300x300&sensor=false";
-
-      //output.appendChild(img);
-    }
-
-    function error() {
-        marcar(0, 0, -1, 1);
-      toastr.error("No se logró obtener la geolocalización.");
-      $.mobile.loading('hide');
-    }
-
-    $.mobile.loading('show', {
-    	text: 'geolocalizando',
-    	textVisible: true
-    });
-
-    navigator.geolocation.getCurrentPosition(success, error);
-}
-
-function getTipoMarca(tpo) {
-    switch(tpo) {
+function getTipoMarca(tipo) {
+    switch(tipo) {
         case 1:
             return "Entrada";
             break;
@@ -202,12 +170,74 @@ function getTipoMarca(tpo) {
     }
 }
 
-//function dspMarcasHoy() {
-    $.each(marcas, function(i, m) {
-        var tipo = getTipoMarca(m[i].Tipomarca);
-        $("#lstMarcas").append('<li data-theme="e" class="ui-li-has-icon"><a data-transition="none" href="" class="ui-btn ui-btn-e"><img src="" class="ui-li-icon">' + tipo + ': ' + m[i].Hora + 'hs | lat ' + m[i].Latitud + ' lon ' + m[i].Longitud + '</a></li>');
-    });
+function dspDatosUsuario() {
+	if (localStorage.getItem("usuario").length > 0) {
+		$("#lblNombre").html(localStorage.getItem("nombre") + " " + localStorage.getItem("apellido"));
+		$("#lblHoy").html("Hola " + localStorage.getItem("nombre") + "!");
+	}
 }
+
+function updBtnMarcar() {
+	/*
+	TIPOS DE MARCAS:
+	1: iniciar jornada
+	2: inicio descanso
+	3: finalizar descanso
+	4: finalizar jornada
+	
+	TIPOS DE FUNCIONARIO:
+	1: marca 1, 2, 3, 4
+	2: marca 1, 4
+	3: marca 1
+	*/
+	var txtMarca;
+	var tpoMarca;
+	switch(parseInt(localStorage.getItem("tipo"))) {
+		case 1:
+			if (hay4) {
+				txtMarca = "";
+				tpoMarca = 0;
+			} else if (hay3) {
+				txtMarca = "Finalizar jornada";
+				tpoMarca = 4;
+			} else if (hay2) {
+				txtMarca = "Finalizar descanso";
+				tpoMarca = 3;
+			} else if (hay1) {
+				txtMarca = "Iniciar descanso";
+				tpoMarca = 2;
+			} else {
+				txtMarca = "Iniciar jornada";
+				tpoMarca = 1;
+			}
+			break;
+		case 2:
+			if (hay4) {
+				txtMarca = "";
+				tpoMarca = 0;
+			} else if (hay1) {
+				txtMarca = "Finalizar jornada";
+				tpoMarca = 4;
+			} else {
+				txtMarca = "Iniciar jornada";
+				tpoMarca = 1;
+			}
+			break;
+		case 3:
+			txtMarca = "Registrar actividad";
+			tpoMarca = 1;
+			break;
+	}
+	$("#btnMarcar").html(txtMarca);
+	$("#btnMarcar").click(
+		function() {
+			marcar(tpoMarca);
+		}
+	);
+}
+
+/*
+
 
 //function setMarcasHoy() {
     localStorage.setItem("marcas", marcas);
@@ -222,36 +252,42 @@ function getTipoMarca(tpo) {
 $(document).ready(init);
 
 function init() {
-   // getMarcasHoy();
-   // dspMarcasHoy();
-                              
-    toastr.options = {
-    "closeButton": false,
-    "debug": false,
-    "newestOnTop": false,
-    "progressBar": true,
-    "positionClass": "toast-top-full-width",
-    "preventDuplicates": true,
-    "onclick": null,
-    "showDuration": "200",
-    "hideDuration": "200",
-    "timeOut": "3000",
-    "extendedTimeOut": "1000",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-  }
-  $("#btnIngresar").click(
-    function() {
-      if (login(parseInt($("#txtUser").val()),""+$("#txtPass").val())) {
-          
-          
-          $("#lblNombre").html(localStorage.getItem("nombre")+" "+localStorage.getItem("apellido"));
-          
-          location.href = "#pHoy";
-      }
-  });
+	hay1 = false;
+	hay2 = false;
+	hay3 = false;
+	hay4 = false;
+	
+	toastr.options = {
+		"closeButton": false,
+		"debug": false,
+		"newestOnTop": false,
+		"progressBar": true,
+		"positionClass": "toast-top-full-width",
+		"preventDuplicates": true,
+		"onclick": null,
+		"showDuration": "200",
+		"hideDuration": "200",
+		"timeOut": "3000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	};
+	
+	//BOTON INGRESAR
+	$("#btnIngresar").click(
+		function() {
+			if (login(parseInt($("#txtUser").val()),""+$("#txtPass").val())) {
+				dspDatosUsuario();
+				location.href = "#pHoy";
+			} else {
+				location.href = "#pIngresar";
+			}
+		}
+	);
+	
+	//BOTON SALIR
     $("#btnSalir").click(
         function() {
             localStorage.removeItem("usuario");
@@ -259,13 +295,13 @@ function init() {
             localStorage.removeItem("apellido");
             localStorage.removeItem("tipo");
             location.href = "#pIngresar";
-        });
-  $("#btnMarcar").click(
-    function() {
-      marcar(1);
-    }
-  );
-  if (localStorage.getItem("usuario").length > 0) {
-      location.href = "#pHoy";
-    }
+        }
+	);
+	
+	//BOTON MARCAR
+	updBtnMarcar();
+	
+	//MOSTRAR DATOS DEL USUARIO
+	dspDatosUsuario();
+	
 }
