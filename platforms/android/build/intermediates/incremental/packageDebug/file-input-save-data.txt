@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Wed Feb 15 11:36:45 UYT 2017
+#Fri Feb 17 17:22:27 UYT 2017
 25.file=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/res/resources-debug.ap_/res/drawable-land-ldpi-v4/screen.png
 41.base=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/assets/debug
 25.base=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/res/resources-debug.ap_
