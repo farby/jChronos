@@ -1,6 +1,6 @@
 # jChronos
 |               | Jornada       | Descanso      |
-|               | Jorna|a       | Desca|nso      |
+|               | Jornaa       | Descanso      |
 | ------------- |:-------------:| -----:|
 | x      | right-aligned | $1600 |
 | x      | centered      |   $12 |
