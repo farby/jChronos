@@ -27,13 +27,23 @@
       <div role="main" class="ui-content" style="margin:0px;padding:1em;">
         <div style="text-align:left;font-size:medium;font-weight:normal;font-style:normal;margin:0px;padding:0px;">Usuario</div>
         <label for="txtUser"/>
-        <input type="text" name="" id="txtUser" value="" data-theme="a" data-mini="false" data-corners="true" data-clear-btn="false" style="text-align:center;"/>
+        <input type="number" name="" id="txtUser" value="" data-theme="a" data-mini="false" data-corners="true" data-clear-btn="true" style="text-align:center;"/>
         <div style="text-align:left;font-size:medium;font-weight:normal;font-style:normal;margin:0px;padding:0px;">Contraseña</div>
         <label for="txtPass"/>
-        <input type="password" name="" id="txtPass" value="" data-theme="a" data-mini="false" data-corners="true" data-clear-btn="false" style="text-align:center;"/>
+        <input type="password" name="" id="txtPass" value="" data-theme="a" data-mini="false" data-corners="true" data-clear-btn="true" style="text-align:center;"/>
+        <fieldset>
+		  <div data-role="fieldcontain">
+			<label for="swcSave">Recorar usuario:</label>
+			<select id="swcSave" data-role="flipswitch">
+			  <option value="true">Si</option>
+			  <option value="false">No</option>
+			</select>
+		  </div>
+		</fieldset>
+       
         <a data-role="button" id="btnIngresar" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="flow" href="">Ingresar</a>
         <div>
-          <a href="">Ayuda</a>
+          <a href="" id="btnAyuda">Ayuda</a>
         </div>
       </div>
     </div>
@@ -110,8 +120,11 @@
         <h1 style="text-align:center;">Agenda</h1>
       </div>
       <div role="main" class="ui-content" style="margin:0px;padding:1em;">
-        <a data-role="button" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Button</a>
+      	<label for="txtMes">Agenda del mes de</label>
+      	<input type="month" data-clear-btn="false" id="txtMes" value="">
+        <a data-role="button" id="btnGetAgenda" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Obtener agenda</a>
       </div>
+      <ul data-role="listview" id="lstAgenda" data-inset="true"></ul>
       <div data-role="footer" data-theme="a" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <div data-role="navbar" data-iconpos="top">
           <ul>
@@ -131,5 +144,17 @@
 
 
 
+	<script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyBVO3VnsMltqfWSlCXSjcDvfmN2evl_om4",
+		authDomain: "jchronos-e0c89.firebaseapp.com",
+		databaseURL: "https://jchronos-e0c89.firebaseio.com",
+		storageBucket: "jchronos-e0c89.appspot.com",
+		messagingSenderId: "768857692883"
+	  };
+	  firebase.initializeApp(config);
+	</script>
   </body>
 </html>

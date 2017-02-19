@@ -1,0 +1,41 @@
+Node version: v6.9.5
+
+Cordova version: 6.5.0
+
+Config.xml file: 
+
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="io.cordova.hellocordova" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>jChronos</name>
+    <description>
+        jChronos + GEOClock
+    </description>
+    <author email="dev@cordova.apache.org" href="http://cordova.io">
+        Apache Cordova Team
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+    </platform>
+    <plugin name="cordova-plugin-whitelist" spec="1" />
+    <plugin name="cordova-plugin-geolocation" spec="~2.4.1" />
+    <engine name="android" spec="~6.1.2" />
+</widget>
+
+
+Plugins: 
+
+cordova-plugin-compat,cordova-plugin-device,cordova-plugin-geolocation,cordova-plugin-vibration,cordova-plugin-whitelist
+
+Error retrieving Android platform information: 
+Android SDK is not set up properly. Make sure that the Android SDK 'tools' and 'platform-tools' directories are in the PATH variable. 
+
+Error: android: Command failed with exit code ENOENT
+

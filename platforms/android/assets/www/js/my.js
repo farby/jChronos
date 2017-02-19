@@ -1,4 +1,3 @@
-var marcas = [];
 var pendientes = [];
 var tmpPendientes = [];
 var tpoMarca;
@@ -47,8 +46,8 @@ function marcar(tpoMarca) {
     var hora = "";
     hora = fh.toISOString().split("T")[1].split(".")[0].substr(0,5);
     var marca = {
-        Usuariows: 'OclockApp',
-        Passwordws: '0cl0ck4pp',
+        Usuariows: "OclockApp",
+        Passwordws: "0cl0ck4pp",
         Cedula: user,
         Fecha: fecha,
         Hora: hora,
@@ -72,22 +71,32 @@ function geolocalizar(marca) {
             marca.Latitud = latitude;
             marca.Longitud = longitude;
             navigator.vibrate(1000);  
+			$.mobile.loading("hide");
+			sndMarca(marca, true);
         }
         function error() {
             toastr.alert("No se logró obtener la geolocalización.");
-            $.mobile.loading('hide');
+			$.mobile.loading("hide");
+			sndMarca(marca, true);
         }
-        $.mobile.loading('show', {
-            text: 'geolocalizando',
+		var options = {
+		  enableHighAccuracy: true,
+		  timeout: 30000,
+		  maximumAge: 60000
+		};
+        $.mobile.loading("show", {
+            text: "geolocalizando",
             textVisible: true
         });
-        navigator.geolocation.getCurrentPosition(success, error);
+        navigator.geolocation.getCurrentPosition(success, error, options);
     }
-	$.mobile.loading('hide');
-	sndMarca(marca, true);
 }
 
 function sndMarca(marca, dsp) {
+	$.mobile.loading("show", {
+		text: "marcando",
+		textVisible: true
+	});
     var ok = false;
     $.soap({
         url: "http://mateo0407-001-site1.atempurl.com/acargomarcasws.aspx",
@@ -121,10 +130,28 @@ function sndMarca(marca, dsp) {
 			tmpPendientes.push(marca);
 		}
 	}
+	$.mobile.loading("hide");
+}
+
+function sndMarcas() {
+	$.mobile.loading("show", {
+		text: "sincronizando",
+		textVisible: true
+	});
+	tmpPendientes = [];
+	pendientes.forEach(
+		function(marca, i, marcas) {
+			sndMarca(marca, false);
+		}
+	);
+	pendientes = tmpPendientes;
+	$.mobile.loading("hide");
 }
 
 function dspMarca(marca) {
-	localStorage.setItem("lstMarcas", localStorage.getItem("lstMarcas") + "<li><a class='ui-btn ui-btn-icon-left " + getTipoMarca(marca.Tipomarca) + ": " + marca.Hora + "hs (lat " + marca.Latitud + " lon " + marca.Longitud + ")</a></li>");
+	if (marca != null) {
+		localStorage.setItem("lstMarcas", localStorage.getItem("lstMarcas") + "<li><a class='ui-btn ui-btn-icon-left " + getTipoMarca(marca.Tipomarca) + ": " + marca.Hora + "hs (lat " + marca.Latitud + " lon " + marca.Longitud + ")</a></li>");	
+	}
 	$("#lstMarcas").html("");
 	$("#lstMarcas").append(localStorage.getItem("lstMarcas"));
 }
@@ -219,19 +246,79 @@ function updBtnMarcar() {
 	$("#btnMarcar").html(txtMarca);
 }
 
-function sndMarcas() {
-	$.mobile.loading('show', {
-		text: 'sincronizando marcas',
-		textVisible: true
-	});
-	tmpPendientes = [];
-	pendientes.forEach(
-		function(marca, i, marcas) {
-			sndMarca(marca, false);
+function dspAgenda(agenda) {
+	$("#lstAgenda").html("");
+	agenda.forEach(
+		function(turno, i, agenda) {
+			dspTurno(turno);
 		}
 	);
-	pendientes = tmpPendientes;
-	$.mobile.loading('hide');
+}
+
+function dspTurno(turno) {
+	//ENCABEZADO
+	$("#lstAgenda").append("<li data-role='list-divider' role='heading' class='ui-li-divider ui-bar-inherit ui-li-has-count ui-first-child'>" + turno.FechaInicio + "<span class='ui-li-count ui-body-inherit'>" + turno.HoraInicio + " - " + turno.HoraFin + "</span></li>");
+	//CUERPO
+	$("#lstAgenda").append("<li><a href='' class='ui-btn ui-btn-icon-right ui-icon-carat-r'><h2>" + "</h2><p><strong>" + turno.LugarNombre + "(" + turno.Calle + " " + turno.Numero + ")</strong></p></a></li>");
+}
+	
+function getAgenda(fecha, hoy) {
+	var yy = parseInt(fecha.substr(0, 4));
+	var mm = parseInt(fecha.substr(5, 2));
+	var user = localStorage.getItem("usuario");
+	var fechaInicio = new Date(yy, mm - 1, 1);
+	var fechaFin;
+	if (!hoy) {
+		fechaFin = new Date(yy, mm, 0);
+	}
+	alert(fechaFin);
+	alert(fechaInicio);
+ 	$.soap({
+		url: "http://mateo0407-001-site1.atempurl.com/averificousuariows.aspx",
+		method: "VerificoUsuarioWS.Execute",
+		appendMethodToURL: false,
+		async: false,
+		withCredentials: false,
+		data: {
+		  Usuariows: 'OclockApp',
+		  Passwordws: '0cl0ck4pp',
+		  Cedula: user,
+		  FechaInicio: fechaInicio,
+			FechaFin: fechaFin
+		},
+		namespaceQualifier: "o",
+		namespaceURL: "OClock",
+		enableLogging: true,
+		success: function (SOAPResponse) {
+		  if ($(SOAPResponse.toXML()).find("Success").text() == "true") {
+			  alert($(SOAPResponse.toXML()).find("Sdtturnoindividual").toJson);
+			  dspAgenda($(SOAPResponse.toXML()).find("Sdtturnoindividual").toJson);
+		  } else {
+			  toastr.error("Mes y/o año incorrectos.");
+		  }
+		},
+		error: function() {
+		  toastr.warning("No se logró establecer conexión con el servidor.");
+		}
+  });
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
+	dspTurno("turno");
 }
 
 $(document).ready(init);
@@ -257,14 +344,6 @@ function init() {
 		"hideMethod": "fadeOut"
 	};
 	
-	//BOTON MARCAR
-	updBtnMarcar();
-	$("#btnMarcar").click(
-		function() {
-			marcar(tpoMarca);
-		}
-	);
-	
 	//BOTON INGRESAR
 	$("#btnIngresar").click(
 		function() {
@@ -289,8 +368,29 @@ function init() {
         }
 	);
 	
+	//BOTON AYUDA
+	$("#btnAyuda").click(
+		function () {
+			login(47422625,"1");
+			location.href = "#pHoy";
+		}
+	);
+	
 	//MOSTRAR DATOS DEL USUARIO
 	dspDatosUsuario();
 	
+	//BOTON MARCAR
+	updBtnMarcar();
+	$("#btnMarcar").click(
+		function() {
+			marcar(tpoMarca);
+		}
+	);
 	
+	//BOTON OBTENER AGENDA
+	$("#btnGetAgenda").click(
+		function() {
+			getAgenda($("#txtMes").val(), false);
+		}
+	);
 }
