@@ -1,1 +1,2 @@
 # jChronos
+||jornada|descanso|
