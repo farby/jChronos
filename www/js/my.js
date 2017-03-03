@@ -271,29 +271,33 @@ function getAgenda(fecha, hoy) {
 	if (!hoy) {
 		fechaFin = new Date(yy, mm, 0);
 	}
-	alert(fechaFin);
-	alert(fechaInicio);
+	var turnos;
  	$.soap({
-		url: "http://mateo0407-001-site1.atempurl.com/averificousuariows.aspx",
-		method: "VerificoUsuarioWS.Execute",
+		url: "http://mateo0407-001-site1.atempurl.com/arevisaagendaws.aspx",
+		method: "revisaagendaws.Execute",
 		appendMethodToURL: false,
 		async: false,
 		withCredentials: false,
 		data: {
-		  Usuariows: 'OclockApp',
-		  Passwordws: '0cl0ck4pp',
-		  Cedula: user,
-		  FechaInicio: fechaInicio,
-			FechaFin: fechaFin
+			Usuariows: 'OclockApp',
+			Passwordws: '0cl0ck4pp',
+			Cedula: user,
+			Fechainicio: fechaInicio,
+			Fechafin: fechaFin
 		},
 		namespaceQualifier: "o",
 		namespaceURL: "OClock",
 		enableLogging: true,
 		success: function (SOAPResponse) {
 		  if ($(SOAPResponse.toXML()).find("Success").text() == "true") {
-			  alert($(SOAPResponse.toXML()).find("Sdtturnoindividual").toJson);
-			  dspAgenda($(SOAPResponse.toXML()).find("Sdtturnoindividual").toJson);
+			  turnos = $(SOAPResponse.toXML()).find("SDTTurnoIndividualItem");
+			  alert(turnos.text());
+			  alert(turnos.find("SocioNom").text());
+			  localStorage.setItem("turnos", turnos);
+			  localStorage.setItem("resp", SOAPResponse);
+			  dspAgenda($(SOAPResponse.toXML()).find("Sdtturnoindividual"));
 		  } else {
+			  alert($(SOAPResponse.toXML()).find("Mensaje"));
 			  toastr.error("Mes y/o año incorrectos.");
 		  }
 		},
@@ -301,6 +305,9 @@ function getAgenda(fecha, hoy) {
 		  toastr.warning("No se logró establecer conexión con el servidor.");
 		}
   });
+	turnos.each(turnos, function(i, x) {
+		alert("#"+i+": "+x.text());
+	});
 	dspTurno("turno");
 	dspTurno("turno");
 	dspTurno("turno");
