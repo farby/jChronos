@@ -22,9 +22,11 @@ function login(user, pass) {
     success: function (SOAPResponse) {
       if ($(SOAPResponse.toXML()).find("Success").text() == "true") {
           localStorage.setItem("usuario", user);
+		  localStorage.setItem("contrasena", pass);
           localStorage.setItem("nombre", $(SOAPResponse.toXML()).find("Nombre").text());
           localStorage.setItem("apellido", $(SOAPResponse.toXML()).find("Apellido").text());
           localStorage.setItem("tpoFuncionario", $(SOAPResponse.toXML()).find("Tipofuncionario").text());
+		  localStorage.setItem("recordar", $("#swcRecordar").val());
 		  toastr.success("¡Bienvenid@!");
         ok = true;
       } else {
@@ -38,7 +40,7 @@ function login(user, pass) {
   return ok;
 }
 
-function marcar(tpoMarca, turno) {
+function marcar(tpoMarca) {
     var user = localStorage.getItem("usuario");
     var fh = new Date();
     var fecha = "";
@@ -184,6 +186,16 @@ function dspDatosUsuario() {
 	}
 }
 
+function dspTurnosHoy() {
+	var hoy = new Date();
+	var strHoy = hoy.getFullYear() + "-";
+	if (hoy.getMonth() + 1 < 10) { strHoy += "0"; }
+	strHoy += (hoy.getMonth()+1) + "-";
+	if (hoy.getDate() + 1 < 10) { strHoy += "0"; }
+	strHoy += (hoy.getDate());
+	getAgenda(strHoy, true);
+}
+
 function updBtnMarcar() {
 	/*
 	TIPOS DE MARCAS:
@@ -197,55 +209,74 @@ function updBtnMarcar() {
 	2: marca 1, 4
 	3: marca 1
 	*/
-	var txtMarca = "";
-	tpoMarca = -1;
-	switch(parseInt(localStorage.getItem("tpoFuncionario"))) {
-		case 1:
-			switch(parseInt(localStorage.getItem("ultMarca"))) {
-				case 0:
-					txtMarca = "Iniciar jornada";
-					tpoMarca = 1;
-					break;
-				case 1:
-					txtMarca = "Iniciar descanso";
-					tpoMarca = 2;
-					break;
-				case 2:
-					txtMarca = "Finalizar descanso";
-					tpoMarca = 3;
-					break;
-				case 3:
-					txtMarca = "Finalizar jornada";
-					tpoMarca = 4;
-					break;
-				default:
-					txtMarca = "Iniciar jornada";
-					tpoMarca = 1;
-					break;
-			}
-			break;
-		case 2:
-			switch(ultMarca) {
-				case 0:
-					txtMarca = "Iniciar jornada";
-					tpoMarca = 1;
-					break;
-				case 1:
-					txtMarca = "Finalizar jornada";
-					tpoMarca = 4;
-					break;
-				default:
-					txtMarca = "Iniciar jornada";
-					tpoMarca = 1;
-					break;
-			}
-			break;
-		case 3:
-			txtMarca = "Registrar actividad";
-			tpoMarca = 1;
-			break;
+	if (localStorage.getItem("dinamico") == "Si") {
+		/*$("#btnMarca1").hide();
+		$("#btnMarca2").hide();
+		$("#btnMarca3").hide();
+		$("#btnMarca4").hide();
+		$("#btnMarcar").show();*/
+		$("#grpEstatico").hide();
+		$("#grpDinamico").show();
+		var txtMarca = "";
+		tpoMarca = -1;
+		switch(parseInt(localStorage.getItem("tpoFuncionario"))) {
+			case 1:
+				switch(parseInt(localStorage.getItem("ultMarca"))) {
+					case 0:
+						txtMarca = "Iniciar jornada";
+						tpoMarca = 1;
+						break;
+					case 1:
+						txtMarca = "Iniciar descanso";
+						tpoMarca = 2;
+						break;
+					case 2:
+						txtMarca = "Finalizar descanso";
+						tpoMarca = 3;
+						break;
+					case 3:
+						txtMarca = "Finalizar jornada";
+						tpoMarca = 4;
+						break;
+					default:
+						txtMarca = "Iniciar jornada";
+						tpoMarca = 1;
+						break;
+				}
+				break;
+			case 2:
+				switch(ultMarca) {
+					case 0:
+						txtMarca = "Iniciar jornada";
+						tpoMarca = 1;
+						break;
+					case 1:
+						txtMarca = "Finalizar jornada";
+						tpoMarca = 4;
+						break;
+					default:
+						txtMarca = "Iniciar jornada";
+						tpoMarca = 1;
+						break;
+				}
+				break;
+			case 3:
+				txtMarca = "Registrar actividad";
+				tpoMarca = 1;
+				break;
+		}
+		$("#btnMarcar").html(txtMarca);
+	} else {
+		/*
+		$("#btnMarcar").hide();
+		$("#btnMarca1").show();
+		$("#btnMarca2").show();
+		$("#btnMarca3").show();
+		$("#btnMarca4").show();*/
+		$("#grpDinamico").hide();
+		$("#grpEstatico").show();
 	}
-	$("#btnMarcar").html(txtMarca);
+	
 }
 
 function dspAgenda(agenda) {
@@ -331,6 +362,10 @@ $(document).ready(init);
 
 function init() {
 	localStorage.setItem("lstMarcas", "");
+	
+	if (localStorage.getItem("dinamico") == "Si") {
+		$("#swcModo").val("Si");
+	}
 						 
 	toastr.options = {
 		"closeButton": false,
@@ -350,18 +385,19 @@ function init() {
 		"hideMethod": "fadeOut"
 	};
 	
+	//AUTO INGRESO
+	if (localStorage.getItem("recordar") == "Si" && parseInt(localStorage.getItem("usuario")) > 0) {
+		dspDatosUsuario();
+		dspTurnosHoy();
+		location.href = "#pHoy";
+	}
+	
 	//BOTON INGRESAR
 	$("#btnIngresar").click(
 		function() {
-			if (login(parseInt($("#txtUser").val()),""+$("#txtPass").val())) {
+			if (login(parseInt($("#txtUser").val()), "" + $("#txtPass").val())) {
 				dspDatosUsuario();
-				var hoy = new Date();
-				var strHoy = hoy.getFullYear() + "-";
-				if (hoy.getMonth() + 1 < 10) { strHoy += "0"; }
-				strHoy += (hoy.getMonth()+1) + "-";
-				if (hoy.getDate() + 1 < 10) { strHoy += "0"; }
-				strHoy += (hoy.getDate());
-				getAgenda(strHoy, true);
+				dspTurnosHoy();
 				location.href = "#pHoy";
 			} else {
 				location.href = "#pIngresar";
@@ -377,6 +413,7 @@ function init() {
             localStorage.removeItem("nombre");
             localStorage.removeItem("apellido");
             localStorage.removeItem("tpoFuncionario");
+			localStorage.setItem("recordar", "No");
             location.href = "#pIngresar";
         }
 	);
@@ -399,15 +436,42 @@ function init() {
 			marcar(tpoMarca);
 		}
 	);
+	$("#btnMarca1").click(
+		function() {
+			marcar(1);
+		}
+	);
+	$("#btnMarca2").click(
+		function() {
+			marcar(2);
+		}
+	);
+	$("#btnMarca3").click(
+		function() {
+			marcar(3);
+		}
+	);
+	$("#btnMarca4").click(
+		function() {
+			marcar(4);
+		}
+	);
 	
 	//BOTON OBTENER AGENDA
 	$("#btnGetAgenda").click(
 		function() {
 			getAgenda($("#txtMes").val(), false);
-			
-			
 			var hoy = new Date();
 				getAgenda(strHoy, true);
+		}
+	);
+	
+	//BOTON GUARDAR PERFIL
+	$("#btnGuardar").click(
+		function() {
+			localStorage.setItem("dinamico", $("#swcModo").val());
+			updBtnMarcar();
+			location.href = "#pHoy";
 		}
 	);
 }

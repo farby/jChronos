@@ -33,10 +33,10 @@
         <input type="password" name="" id="txtPass" value="" data-theme="a" data-mini="false" data-corners="true" data-clear-btn="true" style="text-align:center;"/>
         <fieldset>
 		  <div data-role="fieldcontain">
-			<label for="swcSave">Recorar usuario:</label>
-			<select id="swcSave" data-role="flipswitch">
-			  <option value="true">Si</option>
-			  <option value="false">No</option>
+			<label for="swcRecordar">Mantener sesión iniciada</label>
+			<select id="swcRecordar" data-role="flipswitch">
+			  <option value="No">No</option>
+			  <option value="Si">Si</option>
 			</select>
 		  </div>
 		</fieldset>
@@ -58,17 +58,16 @@
         <div id="lblHoy" style="text-align:center;font-size:small;font-weight:normal;font-style:normal;margin:0px;padding:0px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
         <div class="ui-field-contain">
 			<label for="lstHoy">Turno:</label>
-			<select id="lstHoy" data-native-menu="false">
-				<option value="1">The 1st Option</option>
-        <option value="2">The 2nd Option</option>
-        <option value="3">The 3rd Option</option>
-        <option value="4">The 4th Option</option>
-			</select>
+			<select id="lstHoy" data-native-menu="false"></select>
 		</div>
          <div style="text-align:center;overflow:auto">
           <!--img style="width:200px;height:200px;margin:5px;padding:5px;;background-color:#ffffff;" src="http://maps.googleapis.com/maps/api/staticmap?zoom=15&amp;sensor=false&amp;size=200x200&amp;markers=Av.%20Dr.%20Francisco%20Soca%201370"/-->
         </div>
         <a data-role="button" id="btnMarcar" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">¿?</a>
+        <a data-role="button" id="btnMarca1" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Iniciar jornada</a>
+        <a data-role="button" id="btnMarca2" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Iniciar descanso</a>
+        <a data-role="button" id="btnMarca3" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Finalizar descanso</a>
+        <a data-role="button" id="btnMarca4" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Finalizar jornada</a>
 		  <ul id="lstMarcas" data-role="listview" data-inset="true"></ul>
       </div>
       <div id="divMapa"></div>
@@ -103,7 +102,17 @@
           </a>
         </div>
         <div id="lblNombre" style="text-align:center;font-size:medium;font-weight:normal;font-style:normal;margin:0px;padding:0px;"></div>
-          <a data-role="button" id="btnSalir" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Salir</a>
+         <fieldset>
+		  <div data-role="fieldcontain">
+			<label for="swcModo">Modo dinámico</label>
+			<select id="swcModo" data-role="flipswitch">
+			  <option value="No">No</option>
+			  <option value="Si">Si</option>
+			</select>
+		  </div>
+		</fieldset>
+          <a data-role="button" id="btnGuardar" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Guardar cambios</a>
+          <a data-role="button" id="btnSalir" data-theme="b" data-corners="true" data-inline="false" data-mini="true" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Salir</a>
       </div>
       <div data-role="footer" data-theme="a" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <div data-role="navbar" data-iconpos="top">
