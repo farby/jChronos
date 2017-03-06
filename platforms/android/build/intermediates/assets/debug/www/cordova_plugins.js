@@ -35,11 +35,11 @@ module.exports = [
 module.exports.metadata = 
 // TOP OF METADATA
 {
+    "cordova-plugin-compat": "1.1.0",
     "cordova-plugin-device": "1.1.4",
     "cordova-plugin-geolocation": "2.4.1",
     "cordova-plugin-vibration": "2.1.3",
-    "cordova-plugin-whitelist": "1.3.1",
-    "cordova-plugin-compat": "1.1.0"
+    "cordova-plugin-whitelist": "1.3.1"
 };
 // BOTTOM OF METADATA
 });

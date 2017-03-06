@@ -38,13 +38,14 @@ function login(user, pass) {
   return ok;
 }
 
-function marcar(tpoMarca) {
+function marcar(tpoMarca, turno) {
     var user = localStorage.getItem("usuario");
     var fh = new Date();
     var fecha = "";
     fecha = fh.toISOString().split("T")[0];
     var hora = "";
     hora = fh.toISOString().split("T")[1].split(".")[0].substr(0,5);
+	var turno = $("#lstHoy").val();
     var marca = {
         Usuariows: "OclockApp",
         Passwordws: "0cl0ck4pp",
@@ -53,7 +54,8 @@ function marcar(tpoMarca) {
         Hora: hora,
         Latitud: 0,
         Longitud: 0,
-        Tipomarca: tpoMarca
+        Tipomarca: tpoMarca,
+		Turnoid: turno
     };
 	localStorage.setItem("ultMarca", tpoMarca);
 	updBtnMarcar();
@@ -155,7 +157,7 @@ function dspMarca(marca) {
 	$("#lstMarcas").html("");
 	$("#lstMarcas").append(localStorage.getItem("lstMarcas"));
 }
-
+	
 function getTipoMarca(tpoMarca) {
     switch(tpoMarca) {
         case 1:
@@ -248,51 +250,73 @@ function updBtnMarcar() {
 
 function dspAgenda(agenda) {
 	$("#lstAgenda").html("");
-	agenda.forEach(
-		function(turno, i, agenda) {
-			dspTurno(turno);
-		}
-	);
+	for(var i = 0; i < agenda.length; i++) {
+		dspTurno(agenda[i]);
+	}
+}
+
+function dspHoy(agenda) {
+	$("#lstHoy").html("");
+	var i = 0;
+	for(i = 0; i < agenda.length; i++) {
+		$("#lstHoy").append("<option value='" + agenda[i].find("TurnoId").text() + "'>Inicio: " + agenda[i].find("FechaInicio").text() + " " + agenda[i].find("HoraInicio").text() + " Fin: " + agenda[i].find("FechaFin").text() + " " + agenda[i].find("HoraFin").text() + "</option>");
+	}
+	if (i = 0) {
+		$("#lstHoy").append("<option value='-1'>No hay turnos disponibles</option>");
+	}
 }
 
 function dspTurno(turno) {
 	//ENCABEZADO
-	$("#lstAgenda").append("<li data-role='list-divider' role='heading' class='ui-li-divider ui-bar-inherit ui-li-has-count ui-first-child'>" + turno.FechaInicio + "<span class='ui-li-count ui-body-inherit'>" + turno.HoraInicio + " - " + turno.HoraFin + "</span></li>");
+	$("#lstAgenda").append("<li data-role='list-divider' role='heading' class='ui-li-divider ui-bar-inherit ui-li-has-count ui-first-child'>" + turno.find("FechaInicio").text() + "<span class='ui-li-count ui-body-inherit'>" + turno.find("HoraInicio").text() + " - " + turno.find("HoraFin").text() + "</span></li>");
 	//CUERPO
-	$("#lstAgenda").append("<li><a href='' class='ui-btn ui-btn-icon-right ui-icon-carat-r'><h2>" + "</h2><p><strong>" + turno.LugarNombre + "(" + turno.Calle + " " + turno.Numero + ")</strong></p></a></li>");
+	$("#lstAgenda").append("<li><a href='' class='ui-btn ui-btn-icon-right ui-icon-carat-r'><h2>" + "</h2><p><strong>" + turno.find("LugarNombre").text() + "(" + turno.find("Calle").text() + " " + turno.find("Numero").text() + ")</strong></p></a></li>");
 }
 	
 function getAgenda(fecha, hoy) {
-	var yy = parseInt(fecha.substr(0, 4));
-	var mm = parseInt(fecha.substr(5, 2));
 	var user = localStorage.getItem("usuario");
-	var fechaInicio = new Date(yy, mm - 1, 1);
+	var fechaInicio; 
 	var fechaFin;
 	if (!hoy) {
+		var yy = parseInt(fecha.substr(0, 4));
+		var mm = parseInt(fecha.substr(5, 2));
+		fechaInicio = new Date(yy, mm - 1, 1);
 		fechaFin = new Date(yy, mm, 0);
+	} else {
+		fechaInicio = fecha;
+		fechaFin = fecha;
 	}
-	alert(fechaFin);
-	alert(fechaInicio);
+	var turnos;
  	$.soap({
-		url: "http://mateo0407-001-site1.atempurl.com/averificousuariows.aspx",
-		method: "VerificoUsuarioWS.Execute",
+		url: "http://mateo0407-001-site1.atempurl.com/arevisaagendaws.aspx",
+		method: "revisaagendaws.Execute",
 		appendMethodToURL: false,
 		async: false,
 		withCredentials: false,
 		data: {
-		  Usuariows: 'OclockApp',
-		  Passwordws: '0cl0ck4pp',
-		  Cedula: user,
-		  FechaInicio: fechaInicio,
-			FechaFin: fechaFin
+			Usuariows: 'OclockApp',
+			Passwordws: '0cl0ck4pp',
+			Cedula: user,
+			Fechainicio: fechaInicio,
+			Fechafin: fechaFin
 		},
 		namespaceQualifier: "o",
 		namespaceURL: "OClock",
 		enableLogging: true,
 		success: function (SOAPResponse) {
 		  if ($(SOAPResponse.toXML()).find("Success").text() == "true") {
-			  alert($(SOAPResponse.toXML()).find("Sdtturnoindividual").toJson);
-			  dspAgenda($(SOAPResponse.toXML()).find("Sdtturnoindividual").toJson);
+			  var agenda = new Array();
+			  $(SOAPResponse.toXML()).find("SDTTurnoIndividualItem").each(
+			  	function() {
+					agenda.push($(this));
+				}
+			  );
+			  if (hoy) {
+				 dspHoy(agenda);
+			  } else {
+				  dspAgenda(agenda);
+			  }
+			  
 		  } else {
 			  toastr.error("Mes y/o año incorrectos.");
 		  }
@@ -301,24 +325,6 @@ function getAgenda(fecha, hoy) {
 		  toastr.warning("No se logró establecer conexión con el servidor.");
 		}
   });
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
-	dspTurno("turno");
 }
 
 $(document).ready(init);
@@ -349,6 +355,13 @@ function init() {
 		function() {
 			if (login(parseInt($("#txtUser").val()),""+$("#txtPass").val())) {
 				dspDatosUsuario();
+				var hoy = new Date();
+				var strHoy = hoy.getFullYear() + "-";
+				if (hoy.getMonth() + 1 < 10) { strHoy += "0"; }
+				strHoy += (hoy.getMonth()+1) + "-";
+				if (hoy.getDate() + 1 < 10) { strHoy += "0"; }
+				strHoy += (hoy.getDate());
+				getAgenda(strHoy, true);
 				location.href = "#pHoy";
 			} else {
 				location.href = "#pIngresar";
@@ -391,6 +404,10 @@ function init() {
 	$("#btnGetAgenda").click(
 		function() {
 			getAgenda($("#txtMes").val(), false);
+			
+			
+			var hoy = new Date();
+				getAgenda(strHoy, true);
 		}
 	);
 }
