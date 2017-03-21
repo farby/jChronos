@@ -63,11 +63,15 @@
          <div style="text-align:center;overflow:auto">
           <!--img style="width:200px;height:200px;margin:5px;padding:5px;;background-color:#ffffff;" src="http://maps.googleapis.com/maps/api/staticmap?zoom=15&amp;sensor=false&amp;size=200x200&amp;markers=Av.%20Dr.%20Francisco%20Soca%201370"/-->
         </div>
-        <a data-role="button" id="btnMarcar" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">¿?</a>
-        <a data-role="button" id="btnMarca1" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Iniciar jornada</a>
-        <a data-role="button" id="btnMarca2" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Iniciar descanso</a>
-        <a data-role="button" id="btnMarca3" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Finalizar descanso</a>
-        <a data-role="button" id="btnMarca4" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Finalizar jornada</a>
+        <div data-role="controlgroup" id="grpDinamico">
+        	<a data-role="button" id="btnMarcar" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">¿?</a>
+		  </div>
+        <div data-role="controlgroup" id="grpEstatico">
+			<a data-role="button" id="btnMarca1" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Iniciar jornada</a>
+			<a data-role="button" id="btnMarca2" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Iniciar descanso</a>
+			<a data-role="button" id="btnMarca3" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Finalizar descanso</a>
+			<a data-role="button" id="btnMarca4" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Finalizar jornada</a>
+		  </div>
 		  <ul id="lstMarcas" data-role="listview" data-inset="true"></ul>
       </div>
       <div id="divMapa"></div>

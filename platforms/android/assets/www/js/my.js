@@ -365,6 +365,11 @@ function init() {
 	
 	if (localStorage.getItem("dinamico") == "Si") {
 		$("#swcModo").val("Si");
+	} else if (localStorage.getItem("dinamico") == "No") {
+		$("#swcModo").val("No");
+	} else {
+		localStorage.setItem("dinamico", "No");
+		$("#swcModo").val("No");
 	}
 						 
 	toastr.options = {
@@ -402,6 +407,15 @@ function init() {
 			} else {
 				location.href = "#pIngresar";
 			}
+		}
+	);
+	
+	//BOTON GUARDAR PERFIL
+	$("#btnGuardar").click(
+		function() {
+			localStorage.setItem("dinamico", $("#swcModo").val());
+			updBtnMarcar();
+			location.href = "#pHoy";
 		}
 	);
 	
@@ -463,15 +477,6 @@ function init() {
 			getAgenda($("#txtMes").val(), false);
 			var hoy = new Date();
 				getAgenda(strHoy, true);
-		}
-	);
-	
-	//BOTON GUARDAR PERFIL
-	$("#btnGuardar").click(
-		function() {
-			localStorage.setItem("dinamico", $("#swcModo").val());
-			updBtnMarcar();
-			location.href = "#pHoy";
 		}
 	);
 }
