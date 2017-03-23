@@ -77,9 +77,10 @@ function geolocalizar(marca) {
             navigator.vibrate(1000);  
 			$.mobile.loading("hide");
 			sndMarca(marca, true);
+			updMapa(latitude, longitude);
         }
         function error() {
-            toastr.alert("No se logró obtener la geolocalización.");
+            toastr.error("No se logró obtener la geolocalización.");
 			$.mobile.loading("hide");
 			sndMarca(marca, true);
         }
@@ -178,6 +179,14 @@ function getTipoMarca(tpoMarca) {
             return "'>Sin especificar";
     }
 }
+
+/*function updMapa(lat, lon) {
+	$("#imgMapa").html("<img width='400' src='https://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + lon + "&zoom=15&scale=1&size=400x200&maptype=roadmap&format=png&visual_refresh=true'>");
+}*/
+
+/*function updComoIr(lat, lon) {
+	$("#btnComoIr").attr("href", "moovit://directions?dest_lat=-34.90996&dest_lon=-56.16304&orig_lat=-34.89598&orig_lon=-56.15168&auto_run=true&partner_id=<YOUR_APP_NAME>");
+}*/
 
 function dspDatosUsuario() {
 	if (localStorage.getItem("usuario").length > 0) {
@@ -335,7 +344,7 @@ function getAgenda(fecha, hoy) {
 		namespaceURL: "OClock",
 		enableLogging: true,
 		success: function (SOAPResponse) {
-		  if ($(SOAPResponse.toXML()).find("Success").text() == "true") {
+		  if ($(SOAPResponse.toXML()).find("Success").text() === "true") {
 			  var agenda = new Array();
 			  $(SOAPResponse.toXML()).find("SDTTurnoIndividualItem").each(
 			  	function() {
@@ -362,16 +371,18 @@ $(document).ready(init);
 
 function init() {
 	localStorage.setItem("lstMarcas", "");
-	
-	if (localStorage.getItem("dinamico") == "Si") {
-		$("#swcModo").val("Si");
-	} else if (localStorage.getItem("dinamico") == "No") {
-		$("#swcModo").val("No");
-	} else {
+
+	if (localStorage.getItem("dinamico") === null) {
 		localStorage.setItem("dinamico", "No");
 		$("#swcModo").val("No");
+	} else {
+		if (localStorage.getItem("dinamico") === "Si") {
+			$("#swcModo").val("Si");
+		} else {
+			$("#swcModo").val("No");
+		}
 	}
-						 
+					 
 	toastr.options = {
 		"closeButton": false,
 		"debug": false,
@@ -391,7 +402,7 @@ function init() {
 	};
 	
 	//AUTO INGRESO
-	if (localStorage.getItem("recordar") == "Si" && parseInt(localStorage.getItem("usuario")) > 0) {
+	if (localStorage.getItem("recordar") === "Si" && parseInt(localStorage.getItem("usuario")) > 0) {
 		dspDatosUsuario();
 		dspTurnosHoy();
 		location.href = "#pHoy";
@@ -475,8 +486,9 @@ function init() {
 	$("#btnGetAgenda").click(
 		function() {
 			getAgenda($("#txtMes").val(), false);
-			var hoy = new Date();
-				getAgenda(strHoy, true);
 		}
 	);
+	
+	$("#iframe").height($(window).height()-107);
+	
 }

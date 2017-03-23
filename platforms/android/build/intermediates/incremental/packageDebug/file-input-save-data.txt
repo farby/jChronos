@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Sun Mar 05 21:01:16 UYT 2017
+#Tue Mar 21 00:32:00 UYT 2017
 25.file=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/res/resources-debug.ap_/res/drawable-land-ldpi-v4/screen.png
 41.base=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/assets/debug
 25.base=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/res/resources-debug.ap_
@@ -69,7 +69,7 @@ count=44
 25.set=ANDROID_RESOURCE
 17.base=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/assets/debug
 10.file=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/assets/debug/www/css/jqm_1.4.2/images/ajax-loader.gif
-28.file=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/res/resources-debug.ap_/res/mipmap-xhdpi-v4/icon.png
+28.file=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/res/resources-debug.ap_/res/drawable-land-hdpi-v4/screen.png
 10.base=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/assets/debug
 28.base=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/res/resources-debug.ap_
 14.set=ASSET
@@ -92,7 +92,7 @@ count=44
 35.set=ASSET
 18.base=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/assets/debug
 11.file=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/assets/debug/www/js/jquery.min.map
-29.file=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/res/resources-debug.ap_/res/drawable-land-hdpi-v4/screen.png
+29.file=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/res/resources-debug.ap_/res/mipmap-xhdpi-v4/icon.png
 11.base=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/assets/debug
 29.base=/Users/fabriciobenitez/Projects/jChronos/platforms/android/build/intermediates/res/resources-debug.ap_
 24.set=ASSET
