@@ -49,9 +49,9 @@
     </div>
 
 
-
+    <!--HOY-->
     <div data-role="page" id="pHoy" data-title="hoy" data-theme="a" style="background-repeat:repeat repeat;">
-      <div data-role="header" data-theme="a" data-fullscreen="false" data-position="false" data-tap-toggle="true" data-track-persistent-toolbars="true">
+      <div data-role="header" data-theme="a" data-fullscreen="false" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <h1 style="text-align:center;">Hoy</h1>
         <a href="#pPerfil" data-icon="user" class="ui-btn-right" data-iconpos="left">Perfil</a>
       </div>
@@ -61,7 +61,6 @@
 			<label for="lstHoy">Turno:</label>
 			<select id="lstHoy" data-native-menu="false"></select>
 		</div>
-        	
          <div style="text-align:center;overflow:hidden">
          	<a data-role="button" id="btnComoIr" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="flow" href="#pMapa">¿Cómo ir?</a>
           <img id="imgMapa" width="343" src="https://maps.googleapis.com/maps/api/staticmap?center=Av.%20Dr.%20Francisco%20Soca%201370&zoom=15&scale=1&size=343x196&maptype=roadmap&format=png&visual_refresh=true">
@@ -95,11 +94,11 @@
         </div>
       </div>
     </div>
-
+    <!--HOY-->
     
-    
+    <!--COMO IR-->
     <div data-role="page" id="pMapa" data-title="mapa" data-theme="a">
-		<div data-role="header" data-theme="a" data-fullscreen="false" data-position="false" data-tap-toggle="true" data-track-persistent-toolbars="true">
+		<div data-role="header" data-theme="a" data-fullscreen="false" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
 			<h1 style="text-align:center;">¿Cómo ir?</h1>
 			<a href="#pPerfil" data-icon="user" class="ui-btn-right" data-iconpos="left">Perfil</a>
 	  	</div>
@@ -120,10 +119,11 @@
         </div>
       </div>
     </div>
-    
+    <!--COMO IR-->
 
+    <!--PERFIL-->
     <div data-role="page" id="pPerfil" data-title="perfil" data-theme="a" style="background-repeat:repeat repeat;">
-      <div data-role="header" data-theme="a" data-fullscreen="false" data-position="false" data-tap-toggle="true" data-track-persistent-toolbars="true">
+      <div data-role="header" data-theme="a" data-fullscreen="false" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <h1 style="text-align:center;">Perfil</h1>
       </div>
       <div role="main" class="ui-content" style="margin:0px;padding:1em;">
@@ -161,18 +161,18 @@
         </div>
       </div>
     </div>
+    <!--PERFIL-->
 
-
-
+    <!--AGENDA-->
     <div data-role="page" id="pAgenda" data-title="agenda" data-theme="a" style="background-repeat:repeat repeat;">
-      <div data-role="header" data-theme="a" data-fullscreen="false" data-position="false" data-tap-toggle="true" data-track-persistent-toolbars="true">
+      <div data-role="header" data-theme="a" data-fullscreen="false" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <h1 style="text-align:center;">Agenda</h1>
         <a href="#pPerfil" data-icon="user" class="ui-btn-right" data-iconpos="left">Perfil</a>
       </div>
       <div role="main" class="ui-content" style="margin:0px;padding:1em;">
       	<label for="txtMes">Agenda del mes de</label>
       	<input type="month" data-clear-btn="false" id="txtMes" value="">
-        <a data-role="button" id="btnGetAgenda" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Obtener agenda</a>
+        <a data-role="button" id="btnGetAgenda" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="#popMarcas">Obtener agenda</a>
       </div>
       <ul data-role="listview" id="lstAgenda" data-inset="true"></ul>
       <div data-role="footer" data-theme="a" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
@@ -191,16 +191,67 @@
         </div>
       </div>
     </div>
+    <!--AGENDA-->
+
+    <!--MARCAS-->
+  <div data-role="page" id="pMarcas" data-title="marcas" data-theme="a" style="background-repeat:repeat repeat;">
+      <div data-role="header" data-theme="a" data-fullscreen="false" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
+        <h1 style="text-align:center;">Turno X</h1>
+        <a href="#pPerfil" data-icon="user" class="ui-btn-right" data-iconpos="left">Perfil</a>
+      </div>
+      <div role="main" class="ui-content" style="margin:0px;padding:1em;">
+        <div id="lstTurnoMarcas" data-role="collapsibleset" data-theme="a" data-content-theme="a" style="text-align:center;overflow:hidden">
+          <div data-role="collapsible">
+            <h2>Filtered list</h2>
+            <label>kjlj</label>
+          </div>
+          <div data-role="collapsible">
+            <h2>Formatted text</h2> 
+          </div>
+          <div data-role="collapsible">
+            <h2>Thumbnails and split button</h2>
+          </div>
+      </div>
+      </div>
+      <ul data-role="listview" id="lstAgenda" data-inset="true"></ul>
+      <div data-role="footer" data-theme="a" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
+        <div data-role="navbar" data-iconpos="top">
+          <ul>
+            <li id="btnAgenda">
+              <a data-transition="flip" href="#pAgenda" data-icon="calendar">Agenda</a>
+            </li>
+            <li id="btnHoy">
+              <a data-transition="flip" href="#pHoy" data-icon="location">Hoy</a>
+            </li>
+            <li id="btnMensajes">
+              <a data-transition="flip" href="#pMensajes" data-icon="comment">Mensajes</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!--MARCAS-->
     
-    
-    
+    <!--MENSAJES-->
     <div data-role="page" id="pMensajes" data-title="mensajes" data-theme="a" style="background-repeat:repeat repeat;">
-      <div data-role="header" data-theme="a" data-fullscreen="false" data-position="false" data-tap-toggle="true" data-track-persistent-toolbars="true">
+      <div data-role="header" data-theme="a" data-fullscreen="false" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <h1 style="text-align:center;">Mensajes</h1>
         <a href="#pPerfil" data-icon="user" class="ui-btn-right" data-iconpos="left">Perfil</a>
       </div>
       <div role="main" class="ui-content" style="margin:0px;padding:1em;">
-        
+		<a data-role="button" id="btnCanales" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="fade" data-rel="popup" data-position="fixed" href="#popCanales">Seleccionar canal</a>
+		<div data-role="popup" id="popCanales" data-theme="b">
+			<ul data-role="listview" data-inset="true" style="min-width:210px;width:100%;">
+				<li><a href="#">View details</a></li>
+				<li><a href="#">Edit</a></li>
+				<li><a href="#">Disable</a></li>
+				<li><a href="#">Delete</a></li>
+			</ul>
+		</div>
+		<label id="lblMensajes"></label>
+    	<textarea id="txtMensajes" data-enhanced="true" data-role="none" readonly="true" class="ui-input-text ui-shadow-inset ui-body-inherit ui-corner-all" style="resize:none;overflow-x:visible;overflow-y:scroll;"></textarea>
+		<input type="text" id="txtMensaje" data-position="fixed" placeholder="Nuevo mensaje" value="">
+     	<a data-role="button" id="btnSndMensaje" data-theme="b" data-corners="true" data-inline="false" data-mini="true" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" data-position="fixed" href="">Enviar</a>
       </div>
       <div data-role="footer" data-theme="a" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <div data-role="navbar" data-iconpos="top">
@@ -218,5 +269,6 @@
         </div>
       </div>
     </div>
+    <!--MENSAJES-->
   </body>
 </html>

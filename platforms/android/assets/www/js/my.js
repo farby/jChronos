@@ -153,6 +153,43 @@ function sndMarcas() {
 	$.mobile.loading("hide");
 }
 
+function getMarcas(turno) {
+	$.mobile.loading("show", {
+		text: "obteniendo marcas",
+		textVisible: true
+	});
+    $.soap({
+        url: "http://mateo0407-001-site1.atempurl.com/arevisamarcasws.aspx",
+        method: "revisamarcasws.Execute",
+        appendMethodToURL: false,
+        async: false,
+        withCredentials: false,
+        data: {
+			Usuariows: "OclockApp",
+            Passwordws: "0cl0ck4pp",
+            Turnoid: 1
+		},
+        namespaceQualifier: "o",
+        namespaceURL: "OClock",
+        enableLogging: true,
+        success: function (SOAPResponse) {
+            if ($(SOAPResponse.toXML()).find("Success").text() == "true") {
+				var marcas = new Array();
+				$(SOAPResponse.toXML()).find("SDTMarcasItem").each(function() {
+					marcas.push($(this));
+				});
+				dspTurnoMarcas(marcas);
+            } else {
+                toastr.error("Error al obtener las marcas. Póngase en contacto con un supervisor.");
+            }
+        },
+        error: function() {
+            toastr.warning("No se logró establecer conexión con el servidor.");
+        }
+    });
+	$.mobile.loading("hide");
+}
+
 function dspMarca(marca) {
 	if (marca != null) {
 		localStorage.setItem("lstMarcas", localStorage.getItem("lstMarcas") + "<li><a class='ui-btn ui-btn-icon-left " + getTipoMarca(marca.Tipomarca) + ": " + marca.Hora + "hs (lat " + marca.Latitud + " lon " + marca.Longitud + ")</a></li>");	
@@ -177,6 +214,25 @@ function getTipoMarca(tpoMarca) {
             break;
         default:
             return "'>Sin especificar";
+    }
+}
+
+function getNombreTipoMarca(tpoMarca) {
+    switch(tpoMarca) {
+        case "1":
+            return "Inicio de jornada";
+            break;
+        case "2":
+            return "Inicio de descanso";
+            break;
+        case "3":
+            return "Fin de descanso";
+            break;
+        case "4":
+            return "Fin de jornada";
+            break;
+        default:
+            return "Sin especificar";
     }
 }
 
@@ -295,6 +351,14 @@ function dspAgenda(agenda) {
 	}
 }
 
+function dspTurnoMarcas(marcas) {
+	$("#lstTurnoMarcas").html("");
+	for(var i = 0; i < marcas.length; i++) {
+		$("#lstTurnoMarcas").append("<div data-role='collapsible' style='text-align:center;overflow:hidden'><h2>" + getNombreTipoMarca(marcas[i].find("MarcaTipoId").text()) + ": " + marcas[i].find("MarcaHora").text() + "hs</h2><img width='" + ($(window).width() - 100).toString() + "' src='https://maps.googleapis.com/maps/api/staticmap?autoscale=false&size=" + ($(window).width() - 100).toString() + "x" + ($(window).width() - 200).toString() + "&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:1%7C" + marcas[i].find("MarcaLatitud").text() + "," + marcas[i].find("MarcaLongitud").text() + "'></div>");
+	}
+	$("#lstTurnoMarcas").trigger("create");
+}
+
 function dspHoy(agenda) {
 	$("#lstHoy").html("");
 	var i = 0;
@@ -310,7 +374,8 @@ function dspTurno(turno) {
 	//ENCABEZADO
 	$("#lstAgenda").append("<li data-role='list-divider' role='heading' class='ui-li-divider ui-bar-inherit ui-li-has-count ui-first-child'>" + turno.find("FechaInicio").text() + "<span class='ui-li-count ui-body-inherit'>" + turno.find("HoraInicio").text() + " - " + turno.find("HoraFin").text() + "</span></li>");
 	//CUERPO
-	$("#lstAgenda").append("<li><a href='' class='ui-btn ui-btn-icon-right ui-icon-carat-r'><h2>" + "</h2><p><strong>" + turno.find("LugarNombre").text() + "(" + turno.find("Calle").text() + " " + turno.find("Numero").text() + ")</strong></p></a></li>");
+	//onClick='dspPopMarcas(" + turno.find("TurnoId").text() + ")'
+	$("#lstAgenda").append("<li><a href='#pMarcas' class='ui-btn ui-btn-icon-right ui-icon-carat-r'><h2>" + "</h2><p><strong>" + turno.find("LugarNombre").text() + "(" + turno.find("Calle").text() + " " + turno.find("Numero").text() + ")</strong></p></a></li>");
 }
 	
 function getAgenda(fecha, hoy) {
@@ -346,11 +411,9 @@ function getAgenda(fecha, hoy) {
 		success: function (SOAPResponse) {
 		  if ($(SOAPResponse.toXML()).find("Success").text() === "true") {
 			  var agenda = new Array();
-			  $(SOAPResponse.toXML()).find("SDTTurnoIndividualItem").each(
-			  	function() {
+			  $(SOAPResponse.toXML()).find("SDTTurnoIndividualItem").each(function() {
 					agenda.push($(this));
-				}
-			  );
+				});
 			  if (hoy) {
 				 dspHoy(agenda);
 			  } else {
@@ -367,9 +430,50 @@ function getAgenda(fecha, hoy) {
   });
 }
 
+/////MENSAJES/////
+function sndMensaje() {
+	var hoy = new Date();
+	if (hoy.getDate() + 1 < 10) { strHoy += "0"; }
+	var strHoy = hoy.getDate() + "/";
+	if (hoy.getMonth() + 1 < 10) { strHoy += "0"; }
+	strHoy += (hoy.getMonth() + 1) + "/";
+	strHoy += hoy.getFullYear() + " ";
+	if (hoy.getHours() < 10) { strHoy += "0"; }
+	strHoy += hoy.getHours() + ":";
+	if (hoy.getMinutes() < 10) { strHoy += "0"; }
+	strHoy += hoy.getMinutes();
+	$("#txtMensajes").val($("#txtMensajes").val() + "Yo - " + strHoy + ":\n" + $("#txtMensaje").val() + "\n");
+	$("#txtMensaje").val("");
+}
+
+/*function chkRed() {
+    var estado = navigator.connection.type;
+    var estados = {};
+    estados[Connection.UNKNOWN]  = "desconocida";
+    estados[Connection.ETHERNET] = "ethernet";
+    estados[Connection.WIFI]     = "wifi";
+    estados[Connection.CELL_2G]  = "2G";
+    estados[Connection.CELL_3G]  = "3G";
+    estados[Connection.CELL_4G]  = "4G";
+    estados[Connection.CELL]     = "1G";
+    estados[Connection.NONE]     = "desconectada";
+    alert("Red " + navigator.connection.type.toString());
+	
+}*/
+function onOffline() {
+   alert("Estás desconectado");
+}
+
+function onOnline() {
+   alert("Estás conectado");
+}
+
 $(document).ready(init);
 
 function init() {
+	document.addEventListener("offline", onOffline, false);
+	document.addEventListener("online", onOnline, false);
+
 	localStorage.setItem("lstMarcas", "");
 
 	if (localStorage.getItem("dinamico") === null) {
@@ -486,9 +590,26 @@ function init() {
 	$("#btnGetAgenda").click(
 		function() {
 			getAgenda($("#txtMes").val(), false);
+			getMarcas(1);
 		}
 	);
 	
 	$("#iframe").height($(window).height()-107);
 	
+	
+	/////////////////////////////////////////////////
+	//MENSAJES///////////////////////////////////////
+	$("#txtMensajes").height($(window).height()-300);
+	$("#btnSndMensaje").click(function() {
+		chkRed();
+		alert("j");
+		sndMensaje();
+	});
+	$("#txtMensaje").keypress(function(k) {
+		if(k.which == 13) {
+			sndMensaje();
+		}
+	});
+	/////////////////////////////////////////////////
+	/////////////////////////////////////////////////
 }

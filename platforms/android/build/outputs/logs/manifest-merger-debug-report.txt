@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/fabriciobenitez/Projects/jChronos/platforms/android/AndroidManifest.xml:2:1-18:12
+ADDED from /Users/fabriciobenitez/Projects/jChronos/platforms/android/AndroidManifest.xml:2:1-19:12
 	package
 		ADDED from /Users/fabriciobenitez/Projects/jChronos/platforms/android/AndroidManifest.xml:2:102-135
 		INJECTED from /Users/fabriciobenitez/Projects/jChronos/platforms/android/AndroidManifest.xml
@@ -94,3 +94,7 @@ uses-permission#android.permission.VIBRATE
 ADDED from /Users/fabriciobenitez/Projects/jChronos/platforms/android/AndroidManifest.xml:17:5-66
 	android:name
 		ADDED from /Users/fabriciobenitez/Projects/jChronos/platforms/android/AndroidManifest.xml:17:22-63
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /Users/fabriciobenitez/Projects/jChronos/platforms/android/AndroidManifest.xml:18:5-79
+	android:name
+		ADDED from /Users/fabriciobenitez/Projects/jChronos/platforms/android/AndroidManifest.xml:18:22-76
