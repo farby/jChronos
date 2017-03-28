@@ -65,6 +65,9 @@
          	<a data-role="button" id="btnComoIr" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="flow" href="#pMapa">¿Cómo ir?</a>
           <img id="imgMapa" width="343" src="https://maps.googleapis.com/maps/api/staticmap?center=Av.%20Dr.%20Francisco%20Soca%201370&zoom=15&scale=1&size=343x196&maptype=roadmap&format=png&visual_refresh=true">
         </div>
+        <div data-role="controlgroup" id="grpRecargar">
+        	<a data-role="button" id="btnRecargar" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Buscar turnos</a>
+		  </div>
         <div data-role="controlgroup" id="grpDinamico">
         	<a data-role="button" id="btnMarcar" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">¿?</a>
 		  </div>
@@ -172,7 +175,7 @@
       <div role="main" class="ui-content" style="margin:0px;padding:1em;">
       	<label for="txtMes">Agenda del mes de</label>
       	<input type="month" data-clear-btn="false" id="txtMes" value="">
-        <a data-role="button" id="btnGetAgenda" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="#popMarcas">Obtener agenda</a>
+        <a data-role="button" id="btnGetAgenda" data-theme="b" data-corners="true" data-inline="false" data-mini="true" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Obtener agenda</a>
       </div>
       <ul data-role="listview" id="lstAgenda" data-inset="true"></ul>
       <div data-role="footer" data-theme="a" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
@@ -200,18 +203,7 @@
         <a href="#pPerfil" data-icon="user" class="ui-btn-right" data-iconpos="left">Perfil</a>
       </div>
       <div role="main" class="ui-content" style="margin:0px;padding:1em;">
-        <div id="lstTurnoMarcas" data-role="collapsibleset" data-theme="a" data-content-theme="a" style="text-align:center;overflow:hidden">
-          <div data-role="collapsible">
-            <h2>Filtered list</h2>
-            <label>kjlj</label>
-          </div>
-          <div data-role="collapsible">
-            <h2>Formatted text</h2> 
-          </div>
-          <div data-role="collapsible">
-            <h2>Thumbnails and split button</h2>
-          </div>
-      </div>
+        <div id="lstTurnoMarcas" data-role="collapsibleset" data-theme="a" data-content-theme="a" style="text-align:center;overflow:hidden"></div>
       </div>
       <ul data-role="listview" id="lstAgenda" data-inset="true"></ul>
       <div data-role="footer" data-theme="a" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
@@ -239,14 +231,9 @@
         <a href="#pPerfil" data-icon="user" class="ui-btn-right" data-iconpos="left">Perfil</a>
       </div>
       <div role="main" class="ui-content" style="margin:0px;padding:1em;">
-		<a data-role="button" id="btnCanales" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="fade" data-rel="popup" data-position="fixed" href="#popCanales">Seleccionar canal</a>
-		<div data-role="popup" id="popCanales" data-theme="b">
-			<ul data-role="listview" data-inset="true" style="min-width:210px;width:100%;">
-				<li><a href="#">View details</a></li>
-				<li><a href="#">Edit</a></li>
-				<li><a href="#">Disable</a></li>
-				<li><a href="#">Delete</a></li>
-			</ul>
+		<select id="lstCanales" data-native-menu="false"></select>
+    <div data-role="popup" id="popCanales" data-theme="b">
+			<ul data-role="listview" data-inset="true" style="min-width:210px;width:100%;"></ul>
 		</div>
 		<label id="lblMensajes"></label>
     	<textarea id="txtMensajes" data-enhanced="true" data-role="none" readonly="true" class="ui-input-text ui-shadow-inset ui-body-inherit ui-corner-all" style="resize:none;overflow-x:visible;overflow-y:scroll;"></textarea>
@@ -270,5 +257,6 @@
       </div>
     </div>
     <!--MENSAJES-->
+  
   </body>
 </html>
