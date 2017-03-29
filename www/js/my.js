@@ -4,7 +4,7 @@ var wsUrl;
 var pendientes = [];
 var tmpPendientes = [];
 var tpoMarca;
-var hayCanales;
+var hayTurnos;
 
 function config() {
 	$.getJSON("js/config.json", function(config) {
@@ -31,7 +31,6 @@ function config() {
 		"hideMethod": "fadeOut"
 	};
 	localStorage.setItem("lstMarcas", "");
-	hayCanales = false;
 }
 
 function logout() {
@@ -242,14 +241,6 @@ function getNombreTipoMarca(tpoMarca) {
 }
 //MARCAR
 
-/*function updMapa(lat, lon) {
-	$("#imgMapa").html("<img width='400' src='https://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + lon + "&zoom=15&scale=1&size=400x200&maptype=roadmap&format=png&visual_refresh=true'>");
-}*/
-
-/*function updComoIr(lat, lon) {
-	$("#btnComoIr").attr("href", "moovit://directions?dest_lat=-34.90996&dest_lon=-56.16304&orig_lat=-34.89598&orig_lon=-56.15168&auto_run=true&partner_id=<YOUR_APP_NAME>");
-}*/
-
 //HOY
 function dspDatosUsuario() {
 	if (localStorage.getItem("usuario") != null) {
@@ -271,9 +262,8 @@ function updBtnMarcar() {
 	2: marca 1, 4
 	3: marca 1
 	*/
-	if (localStorage.getItem("hayTurnos") === "Si") {
+	if (hayTurnos) {
 		if (localStorage.getItem("dinamico") === "Si") {
-			$("#grpRecargar").hide();
 			$("#grpEstatico").hide();
 			$("#grpDinamico").show();
 			var txtMarca = "";
@@ -326,18 +316,16 @@ function updBtnMarcar() {
 			}
 			$("#btnMarcar").html(txtMarca);
 		} else {
-			$("#grpRecargar").hide();
 			$("#grpDinamico").hide();
 			$("#grpEstatico").show();
 		}
 	} else {
 		$("#grpDinamico").hide();
 		$("#grpEstatico").hide();
-		$("#grpRecargar").show();
 	}
 }
 
-function dspHoy() {
+function rfsHoy() {
 	var hoy = new Date();
 	var strHoy = hoy.getFullYear() + "-";
 	if (hoy.getMonth() + 1 < 10) { strHoy += "0"; }
@@ -350,6 +338,7 @@ function dspHoy() {
 
 //AGENDA
 function getAgenda(fecha, hoy) {
+	console.log(">getAgenda");
 	var user = localStorage.getItem("usuario");
 	var fechaInicio;
 	var fechaFin;
@@ -362,11 +351,14 @@ function getAgenda(fecha, hoy) {
 		fechaInicio = fecha;
 		fechaFin = fecha;
 	}
+	console.log(">>fechaInicio " + fechaInicio);
+	console.log(">>fechaFin " + fechaFin);
+	console.log(">>hoy " + hoy.toString());
  	$.soap({
 		url: wsUrl + "arevisaagendaws.aspx",
 		method: "revisaagendaws.Execute",
 		appendMethodToURL: false,
-		async: false,
+		async: true,
 		withCredentials: false,
 		data: {
 			Usuariows: wsUser,
@@ -379,13 +371,14 @@ function getAgenda(fecha, hoy) {
 		namespaceURL: "OClock",
 		enableLogging: true,
 		success: function (SOAPResponse) {
+			console.log(">>>succes");
 			var agenda = new Array();
-			localStorage.setItem("hayTurnos", "No");
+			hayTurnos = false;
 			if ($(SOAPResponse.toXML()).find("Success").text() === "true") {
 				$(SOAPResponse.toXML()).find("SDTTurnoIndividualItem").each(function() {
 					agenda.push($(this));
-					localStorage.setItem("hayTurnos", "Si");
 				});
+				hayTurnos = true;
 			} else {
 				if (!hoy) {
 					toastr.error("Mes y/o año incorrectos.");
@@ -398,6 +391,7 @@ function getAgenda(fecha, hoy) {
 			}
 		},
 		error: function() {
+			console.log(">>>error");
 			toastr.warning("No se logró establecer conexión con el servidor.");
 		}
 	});
@@ -405,14 +399,16 @@ function getAgenda(fecha, hoy) {
 
 function dspTurnosHoy(agenda) {
 	$("#lstHoy").html("");
-	var i = 0;
-	for(i = 0; i < agenda.length; i++) {
-		$("#lstHoy").append("<option value='" + agenda[i].find("TurnoId").text() + "'>Inicio: " + agenda[i].find("FechaInicio").text() + " " + agenda[i].find("HoraInicio").text() + " Fin: " + agenda[i].find("FechaFin").text() + " " + agenda[i].find("HoraFin").text() + "</option>");
+	if(agenda.length < 1) {
+		$("#lstHoy").html("<option value='-1'>No hay turnos disponibles</option>");
+	} else {
+		for(var i = 0; i < agenda.length; i++) {
+			$("#lstHoy").append("<option value='" + agenda[i].find("TurnoId").text() + "'>Inicio: " + agenda[i].find("FechaInicio").text() + " " + agenda[i].find("HoraInicio").text() + " Fin: " + agenda[i].find("FechaFin").text() + " " + agenda[i].find("HoraFin").text() + "</option>");
+		}
 	}
-	if(i === 0) {
-		$("#lstHoy").append("<option value='-1'>No hay turnos disponibles</option>");
-	}
-	$("#lstHoy").selectmenu("refresh", true);
+	//$("#lstHoy").selectmenu().trigger('create');
+	$("#lstHoy").selectmenu().selectmenu("refresh", true);
+	updBtnMarcar();
 }
 
 function dspTurnosAgenda(agenda) {
@@ -429,6 +425,8 @@ function dspTurnosAgenda(agenda) {
 
 //MARCAS
 function getMarcasTurno(turno) {
+	console.log(">getMarcasTurno");
+	console.log(">>turno " + turno.toString());
 	$.mobile.loading("show", {
 		text: "obteniendo marcas",
 		textVisible: true
@@ -448,6 +446,7 @@ function getMarcasTurno(turno) {
 		namespaceURL: "OClock",
 		enableLogging: true,
 		success: function (SOAPResponse) {
+			console.log(">>>success");
 			if ($(SOAPResponse.toXML()).find("Success").text() === "true") {
 				var marcas = new Array();
 				$(SOAPResponse.toXML()).find("SDTMarcasItem").each(function() {
@@ -459,6 +458,7 @@ function getMarcasTurno(turno) {
 			}
 		},
 		error: function() {
+			console.log(">>>error");
 			toastr.warning("No se logró establecer conexión con el servidor.");
 		}
 	});
@@ -466,94 +466,133 @@ function getMarcasTurno(turno) {
 }
 
 function dspMarcasTurno(marcas) {
+	console.log(">dspMarcasTurno");
+	console.log(">>cantidad " + marcas.length);
 	$("#pMarcas h1").html(marcas[0].find("MarcaFecha").text());
 	$("#lstTurnoMarcas").html("");
 	for(var i = 0; i < marcas.length; i++) {
 		var marca = "<div data-role='collapsible'><h3>" + getNombreTipoMarca(marcas[i].find("MarcaTipoId").text()) + ": " + marcas[i].find("MarcaHora").text() + "hs</h3><img width='" + ($(window).width() - 100).toString() + "' src='https://maps.googleapis.com/maps/api/staticmap?autoscale=false&size=" + ($(window).width() - 100).toString() + "x" + ($(window).width() - 200).toString() + "&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:1%7C" + marcas[i].find("MarcaLatitud").text() + "," + marcas[i].find("MarcaLongitud").text() + "'></div>";
-        $("#lstTurnoMarcas").append(marca).collapsibleset("refresh");
+        $("#lstTurnoMarcas").append(marca);
 	}
+	$("#lstTurnoMarcas").collapsibleset().trigger('create');
 }
 //MARCAS
 
 //MENSAJES
-function getCanales() {
-	$.soap({
-		url: wsUrl + "arevisacanalesws.aspx",
-		method: "RevisaCanalesWs.Execute",
-		appendMethodToURL: false,
-		async: false,
-		withCredentials: false,
-		data: {
-			Usuariows: wsUser,
-			Passwordws: wsPass
-		},
-		namespaceQualifier: "o",
-		namespaceURL: "OClock",
-		enableLogging: true,
-		success: function (SOAPResponse) {
-			$("#lstCanales").html("");
-			if ($(SOAPResponse.toXML()).find("Success").text() === "true") {
-				$(SOAPResponse.toXML()).find("SDTCanalesItem").each(function() {
-					dspCanal(parseInt($(this).find("CanalId").text()), $(this).find("CanalNombre").text());
-				});
-				hayCanales = true;
-				getMensajes($("#lstCanales").val());
-				$("#lstCanales").change(function() {
-					getMensajes($("#lstCanales").val());
-				});
-			} else {
-				toastr.error("No hay canales disponibles.");
+function getCanales(origen) {
+	console.log(">getCanales");
+	//local
+	if (origen === 0) {
+		console.log(">>local");
+		$("#lstCanales").html(localStorage.getItem("canales"));
+		getMensajes(0);
+	//server
+	} else {
+	console.log(">>server");
+		$.soap({
+			url: wsUrl + "arevisacanalesws.aspx",
+			method: "RevisaCanalesWs.Execute",
+			appendMethodToURL: false,
+			async: false,
+			withCredentials: false,
+			data: {
+				Usuariows: wsUser,
+				Passwordws: wsPass
+			},
+			namespaceQualifier: "o",
+			namespaceURL: "OClock",
+			enableLogging: true,
+			success: function (SOAPResponse) {
+				console.log(">>>success");
+				var canales = new Array();
+				if ($(SOAPResponse.toXML()).find("Success").text() === "true") {
+					$(SOAPResponse.toXML()).find("SDTCanalesItem").each(function() {
+						canales.push($(this));
+					});
+					dspCanales(canales);
+					getMensajes(1);
+				} else {
+					toastr.error("No hay canales disponibles.");
+				}
+			},
+			error: function() {
+				console.log(">>>error");
+				toastr.warning("No se logró establecer conexión con el servidor.");
 			}
-		},
-		error: function() {
-			toastr.warning("No se logró establecer conexión con el servidor.");
-		}
-	});
+		});
+	}
 }
 
-function dspCanal(id, nombre) {
-	$("#lstCanales").append("<option value='" + id.toString() + "'>" + nombre + "</option>");
-	$("#lstCanales").selectmenu("refresh", true);
+function dspCanales(canales) {
+	console.log(">dspCanales");
+	console.log(">>cantidad " + canales.length);
+	if (canales.length > 0) {
+		$("#lstCanales").html("");
+		for (var i = 0; i < canales.length; i++) {
+			$("#lstCanales").append("<option value='" + canales[i].find("CanalId").text() + "'>" + canales[i].find("CanalNombre").text() + "</option>");
+		}	
+		$("#lstCanales").selectmenu().trigger('create');
+		//$("#lstCanales").selectmenu("refresh", true);
+		$("#lstCanales").change(function() {
+			getMensajes(1);
+		});
+		localStorage.setItem("canales", $("#lstCanales").html());
+	}
 }
 
-function getMensajes() {
-	$.soap({
-		url: wsUrl + "arevisamensajesws.aspx",
-		method: "RevisaMensajesWs.Execute",
-		appendMethodToURL: false,
-		async: false,
-		withCredentials: false,
-		data: {
-			Usuariows: wsUser,
-			Passwordws: wsPass,
-			Cedula: localStorage.getItem("usuario"),
-			Canalid: $("#lstCanales").val()
-		},
-		namespaceQualifier: "o",
-		namespaceURL: "OClock",
-		enableLogging: true,
-		success: function (SOAPResponse) {
-			var mensajes = new Array();
-			if ($(SOAPResponse.toXML()).find("Success").text() === "true") {
-				$(SOAPResponse.toXML()).find("SDTMensajesItem").each(function() {
-					mensajes.push($(this));
-				});
-			} else {
-				toastr.error("No hay mensajes en este canal.");
+function getMensajes(origen) {
+	console.log(">getMensajes");
+	//local
+	if (origen === 0) {
+		console.log(">>local");
+		$("#txtMensajes").val(localStorage.getItem("msgCanal" + $("#lstCanales").val()));
+		console.log("msgCanal" + $("#lstCanales").val());
+	//server
+	} else {
+	console.log(">>server");
+		$.soap({
+			url: wsUrl + "arevisamensajesws.aspx",
+			method: "RevisaMensajesWs.Execute",
+			appendMethodToURL: false,
+			async: false,
+			withCredentials: false,
+			data: {
+				Usuariows: wsUser,
+				Passwordws: wsPass,
+				Cedula: localStorage.getItem("usuario"),
+				Canalid: $("#lstCanales").val()
+			},
+			namespaceQualifier: "o",
+			namespaceURL: "OClock",
+			enableLogging: true,
+			success: function (SOAPResponse) {
+				console.log(">>>success");
+				var mensajes = new Array();
+				if ($(SOAPResponse.toXML()).find("Success").text() === "true") {
+					$(SOAPResponse.toXML()).find("SDTMensajesItem").each(function() {
+						mensajes.push($(this));
+					});
+				} else {
+					toastr.error("No hay mensajes en este canal.");
+				}
+				dspMensajes(mensajes);
+			},
+			error: function() {
+				console.log(">>>error");
+				toastr.warning("No se logró establecer conexión con el servidor.");
 			}
-			dspMensajes(mensajes);
-		},
-		error: function() {
-			toastr.warning("No se logró establecer conexión con el servidor.");
-		}
-	});
+		});
+	}
 }
 
 function dspMensajes(mensajes) {
+	console.log(">dspMensajes");
+	console.log(">>cantidad " + mensajes.length);
 	$("#txtMensajes").val("");
 	for(var i = 0; i < mensajes.length; i++) {
 		$("#txtMensajes").val($("#txtMensajes").val() + mensajes[i].find("MensajesEnviadoPorNom").text() + " - " + mensajes[i].find("MensajesFecha").text() + " " + mensajes[i].find("MensajesHora").text() + ":\n" + mensajes[i].find("MensajesMensaje").text() + "\n");
 	}
+	localStorage.setItem("msgCanal" + $("#lstCanales").val(), $("#txtMensajes").val());
 }
 
 function dspMensaje() {
@@ -598,7 +637,7 @@ function sndMensaje(mensaje) {
 		enableLogging: true,
 		success: function (SOAPResponse) {
 			if ($(SOAPResponse.toXML()).find("Success").text() === "true") {
-				getMensajes();
+				getMensajes(1);
 			} else {
 				toastr.error("Error al enviar mensaje.");
 			}
@@ -619,7 +658,9 @@ $(document).ready(init);
 //INIT
 function init() {
 	config();
-
+	if (localStorage.getItem("canales") === null) {
+		localStorage.setItem("canales", "");
+	}
 	//MODO DINAMICO
 	if (localStorage.getItem("dinamico") === null) {
 		localStorage.setItem("dinamico", "No");
@@ -634,23 +675,25 @@ function init() {
 
 	//AUTO INGRESO
 	if (localStorage.getItem("recordar") === "Si" && localStorage.getItem("usuario") != null) {
-		dspDatosUsuario();
-		dspHoy();
 		location.href = "#pHoy";
+		dspDatosUsuario();
+		getCanales(0);
+		setTimeout(function() {
+			rfsHoy();
+		}, 500);
 	}
 
 	//BOTON INGRESAR
-	$("#btnIngresar").click(
-		function() {
-			if (login(parseInt($("#txtUser").val()), "" + $("#txtPass").val())) {
-				dspDatosUsuario();
-				dspHoy();
-				location.href = "#pHoy";
-			} else {
-				location.href = "#pIngresar";
-			}
+	$("#btnIngresar").click(function() {
+		if (login(parseInt($("#txtUser").val()), "" + $("#txtPass").val())) {
+			location.href = "#pHoy";
+			dspDatosUsuario();
+			getCanales(1);
+			rfsHoy();
+		} else {
+			location.href = "#pIngresar";
 		}
-	);
+	});
 
 	//BOTON GUARDAR PERFIL
 	$("#btnGuardar").click(
@@ -706,7 +749,7 @@ function init() {
 	);
 	$("#btnRecargar").click(
 		function() {
-			dspHoy();
+			rfsHoy();
 		}
 	);
 
@@ -720,16 +763,15 @@ function init() {
 	//COMO IR
 	$("#iframe").height($(window).height() - 107);
     
-	//MENSAJES
+	//CANALES / MENSAJES
+	$("#rfsMensajes").click(function() {
+		getCanales(1); //0 = local | 1 = server
+	});
+
 	$("#txtMensajes").height($(window).height() - 325);
-	$("#btndspMensaje").click(function() {
+	/*$("#btndspMensaje").click(function() {
 		dspMensaje();
-	});
-	$("#btnMensajes").click(function() {
-		if (!hayCanales) {
-			getCanales();
-		}
-	});
+	});*/
 	$("#txtMensaje").keypress(function(k) {
 		if(k.which == 13) {
 			dspMensaje();
@@ -737,10 +779,20 @@ function init() {
 	});
 	//REFRESH
 	$("#rfsHoy").click(function() {
-		dspHoy();
+		rfsHoy();
 		updBtnMarcar();
 	});
-	$("#rfsMensajes").click(function() {
-		getCanales();
+
+
+	//LOGIN FOCUS
+	$("#txtUser").focusout(function() {
+		$("#txtPass").focus();
 	});
+	$("#txtPass").focusout(function() {
+		$("#btnIngresar").focus();
+	});
+	$("#btnIngresar").focusout(function() {
+		$("#btnAyuda").focus();
+	});
+	
 }

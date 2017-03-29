@@ -41,7 +41,7 @@
 		  </div>
 		</fieldset>
        
-        <a data-role="button" id="btnIngresar" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="flow" href="">Ingresar</a>
+        <a data-role="button" id="btnIngresar" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="false" data-icon="" data-iconpos="left" data-transition="flow" href="">Ingresar</a>
         <div>
           <a href="" id="btnAyuda">Ayuda</a>
         </div>
@@ -53,34 +53,32 @@
     <div data-role="page" id="pHoy" data-title="hoy" data-theme="a" style="background-repeat:repeat repeat;">
       <div data-role="header" data-theme="a" data-fullscreen="false" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <h1 style="text-align:center;">Hoy</h1>
+        <a href="#" id="rfsHoy" data-icon="refresh" class="ui-btn-left" data-iconpos="notext">Refrescar</a>
         <a href="#pPerfil" data-icon="user" class="ui-btn-right" data-iconpos="left">Perfil</a>
       </div>
       <div role="main" class="ui-content" style="margin:0px;padding:1em;">
         <div id="lblHoy" style="text-align:center;font-size:small;font-weight:normal;font-style:normal;margin:0px;padding:0px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
         <div class="ui-field-contain">
 			<label for="lstHoy">Turno:</label>
-			<select id="lstHoy" data-native-menu="false"></select>
+			<select id="lstHoy" data-native-menu="true"></select>
 		</div>
          <div style="text-align:center;overflow:hidden">
-         	<a data-role="button" id="btnComoIr" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="flow" href="#pMapa">¿Cómo ir?</a>
-          <img id="imgMapa" width="343" src="https://maps.googleapis.com/maps/api/staticmap?center=Av.%20Dr.%20Francisco%20Soca%201370&zoom=15&scale=1&size=343x196&maptype=roadmap&format=png&visual_refresh=true">
-        </div>
-        <div data-role="controlgroup" id="grpRecargar">
-        	<a data-role="button" id="btnRecargar" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Buscar turnos</a>
-		  </div>
+         <img id="imgMapa" width="343" src="https://maps.googleapis.com/maps/api/staticmap?center=Av.%20Dr.%20Francisco%20Soca%201370&zoom=15&scale=1&size=343x196&maptype=roadmap&format=png&visual_refresh=true">
+         	<a data-role="button" id="btnComoIr" data-theme="a" data-corners="true" data-inline="false" data-mini="true" data-shadow="false" data-icon="" data-iconpos="left" data-transition="flow" data-width="20px" href="#pMapa">¿Cómo ir?</a>
+            
+         </div>
+        
         <div data-role="controlgroup" id="grpDinamico">
-        	<a data-role="button" id="btnMarcar" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">¿?</a>
+        	<a data-role="button" id="btnMarcar" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="false" data-icon="" data-iconpos="left" data-transition="none" href="">¿?</a>
 		  </div>
         <div data-role="controlgroup" id="grpEstatico">
-			<a data-role="button" id="btnMarca1" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Iniciar jornada</a>
-			<a data-role="button" id="btnMarca2" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Iniciar descanso</a>
-			<a data-role="button" id="btnMarca3" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Finalizar descanso</a>
-			<a data-role="button" id="btnMarca4" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Finalizar jornada</a>
+			<a data-role="button" id="btnMarca1" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="false" data-icon="" data-iconpos="left" data-transition="none" href="">Iniciar jornada</a>
+			<a data-role="button" id="btnMarca2" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="false" data-icon="" data-iconpos="left" data-transition="none" href="">Iniciar descanso</a>
+			<a data-role="button" id="btnMarca3" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="false" data-icon="" data-iconpos="left" data-transition="none" href="">Finalizar descanso</a>
+			<a data-role="button" id="btnMarca4" data-theme="b" data-corners="true" data-inline="false" data-mini="false" data-shadow="false" data-icon="" data-iconpos="left" data-transition="none" href="">Finalizar jornada</a>
 		  </div>
 		  <ul id="lstMarcas" data-role="listview" data-inset="true"></ul>
       </div>
-      <div id="divMapa"></div>
-<div id="out"></div>
       <div data-role="footer" data-theme="a" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <div data-role="navbar" data-iconpos="top">
           <ul>
@@ -145,8 +143,8 @@
 			</select>
 		  </div>
 		</fieldset>
-          <a data-role="button" id="btnGuardar" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Guardar cambios</a>
-          <a data-role="button" id="btnSalir" data-theme="b" data-corners="true" data-inline="false" data-mini="true" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Salir</a>
+          <a data-role="button" id="btnGuardar" data-theme="a" data-corners="true" data-inline="false" data-mini="false" data-shadow="false" data-icon="" data-iconpos="left" data-transition="none" href="">Guardar cambios</a>
+          <a data-role="button" id="btnSalir" data-theme="b" data-corners="true" data-inline="false" data-mini="true" data-shadow="false" data-icon="" data-iconpos="left" data-transition="none" href="">Salir</a>
       </div>
       <div data-role="footer" data-theme="a" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <div data-role="navbar" data-iconpos="top">
@@ -175,7 +173,7 @@
       <div role="main" class="ui-content" style="margin:0px;padding:1em;">
       	<label for="txtMes">Agenda del mes de</label>
       	<input type="month" data-clear-btn="false" id="txtMes" value="">
-        <a data-role="button" id="btnGetAgenda" data-theme="b" data-corners="true" data-inline="false" data-mini="true" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" href="">Obtener agenda</a>
+        <a data-role="button" id="btnGetAgenda" data-theme="b" data-corners="true" data-inline="false" data-mini="true" data-shadow="false" data-icon="" data-iconpos="left" data-transition="none" href="">Obtener agenda</a>
       </div>
       <ul data-role="listview" id="lstAgenda" data-inset="true"></ul>
       <div data-role="footer" data-theme="a" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
@@ -228,17 +226,18 @@
     <div data-role="page" id="pMensajes" data-title="mensajes" data-theme="a" style="background-repeat:repeat repeat;">
       <div data-role="header" data-theme="a" data-fullscreen="false" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <h1 style="text-align:center;">Mensajes</h1>
+        <a href="#" id="rfsMensajes" data-icon="refresh" class="ui-btn-left" data-iconpos="notext">Refrescar</a>
         <a href="#pPerfil" data-icon="user" class="ui-btn-right" data-iconpos="left">Perfil</a>
       </div>
       <div role="main" class="ui-content" style="margin:0px;padding:1em;">
-		<select id="lstCanales" data-native-menu="false"></select>
+		<select id="lstCanales" data-native-menu="true"></select>
     <div data-role="popup" id="popCanales" data-theme="b">
 			<ul data-role="listview" data-inset="true" style="min-width:210px;width:100%;"></ul>
 		</div>
 		<label id="lblMensajes"></label>
-    	<textarea id="txtMensajes" data-enhanced="true" data-role="none" readonly="true" class="ui-input-text ui-shadow-inset ui-body-inherit ui-corner-all" style="resize:none;overflow-x:visible;overflow-y:scroll;"></textarea>
+    	<textarea id="txtMensajes" data-enhanced="true" data-role="none" readonly="true" class="ui-input-text ui-body-inherit ui-corner-all" style="resize:none;overflow-x:visible;overflow-y:scroll;"></textarea>
 		<input type="text" id="txtMensaje" data-position="fixed" placeholder="Nuevo mensaje" value="">
-     	<a data-role="button" id="btnSndMensaje" data-theme="b" data-corners="true" data-inline="false" data-mini="true" data-shadow="true" data-icon="" data-iconpos="left" data-transition="none" data-position="fixed" href="">Enviar</a>
+     	<a data-role="button" id="btnSndMensaje" data-theme="b" data-corners="true" data-inline="false" data-mini="true" data-shadow="false" data-icon="" data-iconpos="left" data-transition="none" data-position="fixed" href="">Enviar</a>
       </div>
       <div data-role="footer" data-theme="a" data-position="fixed" data-tap-toggle="true" data-track-persistent-toolbars="true">
         <div data-role="navbar" data-iconpos="top">
